@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-jammy
+FROM docker-mirrors.alauda.cn/library/eclipse-temurin:17-jre-jammy
 
 LABEL org.opencontainers.image.url=https://github.com/SonarSource/docker-sonarqube
 
@@ -51,7 +51,7 @@ RUN set -eux; \
     ln -s "${SONARQUBE_HOME}/lib/sonar-application-${SONARQUBE_VERSION}.jar" "${SONARQUBE_HOME}/lib/sonarqube.jar"; \
     chmod -R 555 ${SONARQUBE_HOME}; \
     chmod -R ugo+wrX "${SQ_DATA_DIR}" "${SQ_EXTENSIONS_DIR}" "${SQ_LOGS_DIR}" "${SQ_TEMP_DIR}"; \
-    apt-get remove -y gnupg unzip curl; \
+    apt-get remove -y gnupg unzip; \
     rm -rf /var/lib/apt/lists/*;
 
 COPY entrypoint.sh ${SONARQUBE_HOME}/docker/

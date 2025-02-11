@@ -1,3 +1,11 @@
+ARG ELASTICSEARCH_VERSION=7.17.24
+FROM docker-mirrors.alauda.cn/library/elasticsearch:${ELASTICSEARCH_VERSION} as es
+
+RUN mkdir -p /tmp/elasticsearch/modules; \
+    rm -rf lib/tools; \
+    cp -r bin config lib LICENSE.txt NOTICE.txt  plugins  README.asciidoc /tmp/elasticsearch/;\
+    cp -r modules/analysis-common modules/parent-join modules/lang-painless modules/transport-netty4 modules/reindex /tmp/elasticsearch/modules/;
+
 FROM docker-mirrors.alauda.cn/library/eclipse-temurin:17-jre-jammy
 
 LABEL org.opencontainers.image.url=https://github.com/SonarSource/docker-sonarqube
@@ -6,11 +14,16 @@ ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
     LC_ALL='en_US.UTF-8'
 
+ARG REPO_HOST=https://build-nexus.alauda.cn
+ARG SONAR_GO_PLUGIN_VERSION=1.12.0
+
 #
 # SonarQube setup
 #
 ARG SONARQUBE_VERSION=9.9.8.100196
 ARG SONARQUBE_ZIP_URL=https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${SONARQUBE_VERSION}.zip
+ARG POSTGRES_JAR_VERSION=42.5.6
+ARG POSTGRES_JAR_URL=https://jdbc.postgresql.org/download/postgresql-${POSTGRES_JAR_VERSION}.jar
 ENV JAVA_HOME='/opt/java/openjdk' \
     SONARQUBE_HOME=/opt/sonarqube \
     SONAR_VERSION="${SONARQUBE_VERSION}" \
@@ -46,6 +59,9 @@ RUN set -eux; \
     gpg --batch --verify sonarqube.zip.asc sonarqube.zip; \
     unzip -q sonarqube.zip; \
     mv "sonarqube-${SONARQUBE_VERSION}" sonarqube; \
+    rm sonarqube/lib/jdbc/postgresql/*; \
+    rm -rf sonarqube/elasticsearch/; \
+    curl --fail --location --output sonarqube/lib/jdbc/postgresql/postgresql-${POSTGRES_JAR_VERSION}.jar --silent --show-error "${POSTGRES_JAR_URL}"; \
     rm sonarqube.zip*; \
     rm -rf ${SONARQUBE_HOME}/bin/*; \
     ln -s "${SONARQUBE_HOME}/lib/sonar-application-${SONARQUBE_VERSION}.jar" "${SONARQUBE_HOME}/lib/sonarqube.jar"; \
@@ -55,6 +71,15 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*;
 
 COPY entrypoint.sh ${SONARQUBE_HOME}/docker/
+
+COPY --from=es /tmp/elasticsearch /opt/sonarqube/elasticsearch
+
+# replace go-plugin to support arm architecture
+# pipeline: https://edge.alauda.cn/console-devops/workspace/devops/ci?namespace=tools&cluster=business-build&buildName=sonarqube-go-plugin
+RUN set -eux; \
+    rm $(find /opt/sonarqube/lib/extensions/ -name "sonar-go-plugin*"); \
+    curl -o ${SONARQUBE_HOME}/lib/extensions/sonar-go-plugin-${SONAR_GO_PLUGIN_VERSION}.jar ${REPO_HOST}/repository/alauda/sonar-plugin/sonar-go-plugin-${SONAR_GO_PLUGIN_VERSION}-all.jar; \
+    chown -R 1000:1000 ${SONARQUBE_HOME}/lib/extensions/sonar-go-plugin-${SONAR_GO_PLUGIN_VERSION}.jar
 
 WORKDIR ${SONARQUBE_HOME}
 EXPOSE 9000

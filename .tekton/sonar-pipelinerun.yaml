@@ -3,7 +3,7 @@ kind: PipelineRun
 metadata:
   name: sonarqube-build
   annotations:
-    pipelinesascode.tekton.dev/on-comment: "^((/sonarqube-build)|(/test-all))$"
+    pipelinesascode.tekton.dev/on-comment: "^((alauda/.*)|(/test-all))$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       ((
         event == "push" && (
@@ -63,15 +63,16 @@ spec:
     # - name: test-script
     #   value: |
     #     echo skip
-
-    # - name: upstreams
-    #   value:
-    #     - repo-url: https://github.com/example/repo.git
-    #       branch-name: main
-    #       yaml-file-path: chart/values.yaml
-
-    # - name: upstream-secret
-    #   value: git-repo-example-secret
+    - name: upstreams
+      value:
+        - |
+          repo-url: https://github.com/AlaudaDevops/helm-chart-sonarqube.git
+          branch-name: {{ source_branch }}
+          yaml-file-path: charts/sonarqube/values.yaml
+    - name: upstream-branch-condition
+      value: "^(main|master|release.*|alauda.*)$"
+    - name: upstream-secret
+      value: github-credentials
 
   workspaces:
     - name: source

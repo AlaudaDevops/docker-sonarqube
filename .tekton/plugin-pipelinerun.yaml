@@ -3,7 +3,7 @@ kind: PipelineRun
 metadata:
   name: sonarqube-plugin
   annotations:
-    pipelinesascode.tekton.dev/on-comment: "^((/sonarqube-plugin)|(/test-all))$"
+    pipelinesascode.tekton.dev/on-comment: "^((alauda/.*)|(/test-all))$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       "plugin/plugins.txt".pathChanged() && "plugin/Dockerfile".pathChanged() && ((
         event == "push" && (
@@ -64,14 +64,15 @@ spec:
     #   value: |
     #     echo skip
 
-    # - name: upstreams
-    #   value:
-    #     - repo-url: https://github.com/example/repo.git
-    #       branch-name: main
-    #       yaml-file-path: chart/values.yaml
-
-    # - name: upstream-secret
-    #   value: git-repo-example-secret
+    - name: upstreams
+      value:
+        - repo-url: https://github.com/AlaudaDevops/helm-chart-sonarqube.git
+          branch-name: alauda/9.9.8
+          yaml-file-path: charts/sonarqube/values.yaml
+    - name: upstream-branch-condition
+      value: "^(main|master|release.*|alauda.*)$"
+    - name: upstream-secret
+      value: github-credentials
 
   workspaces:
     - name: source

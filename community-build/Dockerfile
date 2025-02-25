@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-noble
+FROM docker-mirrors.alauda.cn/library/eclipse-temurin:17-jre-noble
 
 LABEL io.k8s.description="SonarQube Community Build is a self-managed, automatic code review tool that systematically helps you deliver Clean Code."
 LABEL io.openshift.min-cpu=400m
@@ -11,6 +11,8 @@ ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
     LC_ALL='en_US.UTF-8'
 
+ARG REPO_HOST=https://build-nexus.alauda.cn
+ARG SONAR_GO_PLUGIN_VERSION=1.12.0
 #
 # SonarQube setup
 #
@@ -66,6 +68,13 @@ RUN set -eux; \
 VOLUME ["${SQ_DATA_DIR}", "${SQ_EXTENSIONS_DIR}", "${SQ_LOGS_DIR}", "${SQ_TEMP_DIR}"]
 
 COPY entrypoint.sh ${SONARQUBE_HOME}/docker/
+
+# replace go-plugin to support arm architecture
+# pipeline: https://edge.alauda.cn/console-devops/workspace/devops/ci?namespace=tools&cluster=business-build&buildName=sonarqube-go-plugin
+RUN set -eux; \
+    rm $(find /opt/sonarqube/lib/extensions/ -name "sonar-go-plugin*"); \
+    curl -o ${SONARQUBE_HOME}/lib/extensions/sonar-go-plugin-${SONAR_GO_PLUGIN_VERSION}.jar ${REPO_HOST}/repository/alauda/sonar-plugin/sonar-go-plugin-${SONAR_GO_PLUGIN_VERSION}-all.jar; \
+    chown -R 1000:1000 ${SONARQUBE_HOME}/lib/extensions/sonar-go-plugin-${SONAR_GO_PLUGIN_VERSION}.jar
 
 WORKDIR ${SONARQUBE_HOME}
 EXPOSE 9000

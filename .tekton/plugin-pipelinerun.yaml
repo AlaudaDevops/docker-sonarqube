@@ -5,7 +5,7 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-comment: "^((alauda/.*)|(/test-all))$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
-      "plugin/plugins.txt".pathChanged() && "plugin/Dockerfile".pathChanged() && ((
+      ("plugin/plugins.txt".pathChanged() || "plugin/Dockerfile".pathChanged()) && ((
         event == "push" && (
           source_branch.matches("^(alauda/.*)$") ||
           target_branch.startsWith("refs/tags/")

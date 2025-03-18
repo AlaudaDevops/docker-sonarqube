@@ -6,6 +6,9 @@ metadata:
     pipelinesascode.tekton.dev/on-comment: "^((alauda/.*)|(/test-all))$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       ((
+        "community-build/**".pathChanged() ||
+        ".tekton/sonar-pipelinerun.yaml".pathChanged()
+      ) && (
         event == "push" && (
           source_branch.matches("^(alauda/.*)$") ||
           target_branch.startsWith("refs/tags/")
@@ -42,9 +45,8 @@ spec:
     - name: image-repository
       value: build-harbor.alauda.cn/devops/sonarqube
 
-    - name: tags
-      value:
-        - v2025.1.0
+    - name: tag-prefix
+      value: v2025.1.0-
     - name: context
       value: community-build/
 
@@ -90,6 +92,9 @@ spec:
     - name: basic-auth
       secret:
         secretName: "{{ git_auth_secret }}"
+    - name: gitversion-config
+      configMap:
+        name: gitversion-config
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。

@@ -65,6 +65,16 @@ RUN set -eux; \
     apt-get remove -y gnupg unzip; \
     rm -rf /var/lib/apt/lists/*;
 
+## patch jar to fix vulnerabilities, when sonar fix the vulnerabilities, remove the patch jar
+COPY patches/json-smart-2.5.2.jar /opt/sonarqube/elasticsearch/modules/x-pack-security/json-smart-2.5.2.jar
+COPY patches/netty-handler-4.1.118.Final.jar /opt/sonarqube/elasticsearch/modules/transport-netty4/netty-handler-4.1.118.Final.jar
+COPY patches/netty-handler-4.1.118.Final.jar /opt/sonarqube/elasticsearch/modules/x-pack-security/netty-handler-4.1.118.Final.jar
+COPY patches/netty-handler-4.1.118.Final.jar /opt/sonarqube/elasticsearch/modules/x-pack-inference/netty-handler-4.1.118.Final.jar
+RUN rm -f /opt/sonarqube/elasticsearch/modules/transport-netty4/netty-handler-4.1.115.Final.jar; \
+    rm -f /opt/sonarqube/elasticsearch/modules/x-pack-security/netty-handler-4.1.115.Final.jar; \
+    rm -f /opt/sonarqube/elasticsearch/modules/x-pack-inference/netty-handler-4.1.115.Final.jar; \
+    rm -f /opt/sonarqube/elasticsearch/modules/x-pack-security/json-smart-2.5.1.jar;
+
 VOLUME ["${SQ_DATA_DIR}", "${SQ_EXTENSIONS_DIR}", "${SQ_LOGS_DIR}", "${SQ_TEMP_DIR}"]
 
 COPY entrypoint.sh ${SONARQUBE_HOME}/docker/

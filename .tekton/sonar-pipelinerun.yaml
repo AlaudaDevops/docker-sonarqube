@@ -3,19 +3,19 @@ kind: PipelineRun
 metadata:
   name: sonarqube-build
   annotations:
-    pipelinesascode.tekton.dev/on-comment: "^((alauda/.*)|(/test-all))$"
+    pipelinesascode.tekton.dev/on-comment: "^((/sonarqube)|(/test-all))$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       ((
         "community-build/**".pathChanged() ||
         ".tekton/sonar-pipelinerun.yaml".pathChanged()
       ) && (
         event == "push" && (
-          source_branch.matches("^(alauda/.*)$") ||
+          source_branch.matches("^(alauda-.*)$") ||
           target_branch.startsWith("refs/tags/")
         )
       ) || (
         event == "pull_request" && (
-          target_branch.matches("^(alauda/.*)$")
+          target_branch.matches("^(alauda-.*)$")
         )
       ))
     pipelinesascode.tekton.dev/max-keep-runs: "5"
@@ -45,8 +45,9 @@ spec:
     - name: image-repository
       value: build-harbor.alauda.cn/devops/sonarqube
 
-    - name: tag-prefix
-      value: v2025.1.0-
+    - name: tags
+      value:
+        - v2025.1.0
     - name: context
       value: community-build/
 
@@ -60,6 +61,8 @@ spec:
     ## Some JAR files in the SonarQube installation package contain application vulnerabilities. Currently there are no new versions available.
     ## Need to wait for the community to release new versions before upgrading. Therefore, temporarily skip trivy scanning.
     - name: ignore-trivy-scan
+      value: true
+    - name: ignore-gitversion-tag
       value: true
 
     # - name: test-script

@@ -3,19 +3,19 @@ kind: PipelineRun
 metadata:
   name: sonarqube-plugin
   annotations:
-    pipelinesascode.tekton.dev/on-comment: "^((alauda/.*)|(/test-all))$"
+    pipelinesascode.tekton.dev/on-comment: "^((/plugin)|(/test-all))$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       (
         "plugin/**".pathChanged() || 
         ".tekton/plugin-pipelinerun.yaml".pathChanged()
       ) && ((
         event == "push" && (
-          source_branch.matches("^(alauda/.*)$") ||
+          source_branch.matches("^(alauda-.*)$") ||
           target_branch.startsWith("refs/tags/")
         )
       ) || (
         event == "pull_request" && (
-          target_branch.matches("^(alauda/.*)$")
+          target_branch.matches("^(alauda-.*)$")
         )
       ))
     pipelinesascode.tekton.dev/max-keep-runs: "5"
@@ -45,8 +45,9 @@ spec:
     - name: image-repository
       value: build-harbor.alauda.cn/devops/sonarqube-plugins
 
-    - name: tag-prefix
-      value: v2025.1.0-
+    - name: tags
+      value:
+        - v2025.1.0
     - name: dockerfile-path
       value: plugin/Dockerfile
 
@@ -61,6 +62,8 @@ spec:
     ## Need to wait for the community to release new versions before upgrading. Therefore, temporarily skip trivy scanning.
     - name: ignore-trivy-scan
       value: true
+    - name: ignore-gitversion-tag
+      value: true
 
     # - name: test-script
     #   value: |
@@ -70,7 +73,7 @@ spec:
       value:
         - |
           repo-url: https://github.com/AlaudaDevops/helm-chart-sonarqube.git
-          branch-name: branch-name: {{ source_branch }}
+          branch-name: {{ source_branch }}
           yaml-file-path: charts/sonarqube/values.yaml
     - name: upstream-branch-condition
       value: "^(main|master|release.*|alauda.*)$"

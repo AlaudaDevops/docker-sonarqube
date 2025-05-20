@@ -10,4 +10,5 @@ if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
     set -- "${DEFAULT_CMD[@]}" "$@"
 fi
 
+
 exec "$@"

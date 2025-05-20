@@ -58,7 +58,7 @@ spec:
     ## Some JAR files in the SonarQube installation package contain application vulnerabilities. Currently there are no new versions available.
     ## Need to wait for the community to release new versions before upgrading. Therefore, temporarily skip trivy scanning.
     - name: ignore-trivy-scan
-      value: true
+      value: false
 
     # - name: test-script
     #   value: |

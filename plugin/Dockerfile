@@ -1,4 +1,4 @@
-FROM build-harbor.alauda.cn/ops/alpine:3@sha256:d97795482dc347cc59432bf4fe506b5f92ca03f83d4fd3c746b8fa49d8371e5a
+FROM build-harbor.alauda.cn/ops/alpine:20220425103656@sha256:e6acd26322e343824236b7b1ea7d7f6986899d2da152bd1febe6d1b04eecf368
 
 ADD plugins.txt /tmp/plugins/
 WORKDIR /tmp/plugins

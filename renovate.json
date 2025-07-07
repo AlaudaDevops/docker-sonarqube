@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "docker:pinDigests"],
+  "baseBranches": ["/^alauda[\\/-].*$/"],
+  "enabledManagers": ["dockerfile"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["SonarSource/sonarqube"],
+      "allowedVersionUpdateTypes": ["patch"],
+      "automerge": false
+    },
+    {
+      "matchDatasources": ["maven"],
+      "matchPackageNames": ["org.postgresql:postgresql"],
+      "allowedVersions": "/^\\d+\\.\\d+\\.\\d+$/",
+      "semanticCommitType": "fix",
+      "allowedVersionUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}

@@ -20,8 +20,10 @@ ARG SONAR_GO_PLUGIN_VERSION=1.12.0
 #
 # SonarQube setup
 #
+## renovate: datasource=github-releases depName=SonarSource/sonarqube
 ARG SONARQUBE_VERSION=9.9.8.100196
 ARG SONARQUBE_ZIP_URL=https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${SONARQUBE_VERSION}.zip
+# renovate: datasource=maven depName=org.postgresql/postgresql
 ARG POSTGRES_JAR_VERSION=42.5.6
 ARG POSTGRES_JAR_URL=https://jdbc.postgresql.org/download/postgresql-${POSTGRES_JAR_VERSION}.jar
 ENV JAVA_HOME='/opt/java/openjdk' \

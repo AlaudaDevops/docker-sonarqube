@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.15_6-jre-noble@sha256:0983100c459fedd413153282c048a66d622b31894308131aafbd07634c1ce3c7
+FROM eclipse-temurin:21.0.7_6-jre-noble@sha256:862bb9fb9cf8272e02d07b44bf0812ed765c090aec572a18ab9d2e94be8d4bfd
 
 LABEL io.k8s.description="SonarQube Server is a self-managed, automatic code review tool that systematically helps you deliver Clean Code."
 LABEL io.openshift.min-cpu=400m

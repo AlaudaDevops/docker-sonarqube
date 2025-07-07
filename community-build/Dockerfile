@@ -1,4 +1,4 @@
-FROM docker-mirrors.alauda.cn/library/eclipse-temurin:17-jre-noble
+FROM docker-mirrors.alauda.cn/library/eclipse-temurin:17-jre-noble@sha256:0983100c459fedd413153282c048a66d622b31894308131aafbd07634c1ce3c7
 
 LABEL io.k8s.description="SonarQube Community Build is a self-managed, automatic code review tool that systematically helps you deliver Clean Code."
 LABEL io.openshift.min-cpu=400m

@@ -11,6 +11,11 @@
         "automerge": true
       },
       {
+        "matchDatasources": ["docker"],
+        "matchUpdateTypes": ["major"],
+        "enabled": false
+      },
+      {
         "matchDatasources": ["github-releases"],
         "matchPackageNames": ["SonarSource/sonarqube"],
         "matchUpdateTypes": ["patch"],

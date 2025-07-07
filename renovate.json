@@ -1,14 +1,14 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:recommended", "docker:pinDigests"],
-    "baseBranches": ["/^alauda[\\/-].*$/"],
+    "baseBranches": ["/^alauda-20.*$/"],
     "enabledManagers": ["dockerfile"],
     "labels": ["dependencies"],
     "packageRules": [
       {
         "matchDatasources": ["github-releases"],
         "matchPackageNames": ["SonarSource/sonarqube"],
-        "allowedVersionUpdateTypes": ["patch"],
+        "matchUpdateTypes": ["patch"],
         "automerge": false
       },
       {
@@ -16,7 +16,7 @@
         "matchPackageNames": ["org.postgresql:postgresql"],
         "allowedVersions": "/^\\d+\\.\\d+\\.\\d+$/",
         "semanticCommitType": "fix",
-        "allowedVersionUpdateTypes": ["minor", "patch"],
+        "matchUpdateTypes": ["minor", "patch"],
         "automerge": true
       }
     ]

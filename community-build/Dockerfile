@@ -16,6 +16,7 @@ ENV LANG='en_US.UTF-8' \
 #
 # SonarQube setup
 #
+# renovate: datasource=github-releases depName=SonarSource/sonarqube
 ARG SONARQUBE_VERSION=25.1.0.102122
 ARG SONARQUBE_ZIP_URL=https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${SONARQUBE_VERSION}.zip
 ENV DOCKER_RUNNING="true" \

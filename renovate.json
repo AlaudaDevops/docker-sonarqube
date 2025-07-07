@@ -14,7 +14,6 @@
       {
         "matchDatasources": ["maven"],
         "matchPackageNames": ["org.postgresql:postgresql"],
-        "allowedVersions": "/^\\d+\\.\\d+\\.\\d+$/",
         "semanticCommitType": "fix",
         "matchUpdateTypes": ["minor", "patch"],
         "automerge": true

@@ -3,19 +3,19 @@ kind: PipelineRun
 metadata:
   name: sonarqube-plugin
   annotations:
-    pipelinesascode.tekton.dev/on-comment: "^((alauda/.*)|(/test-all))$"
+    pipelinesascode.tekton.dev/on-comment: "^((/plugin)|(/test-all))$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       ((
         "image/plugin/**".pathChanged() || 
         ".tekton/plugin-pipelinerun.yaml".pathChanged()
       ) && (
         event == "push" && (
-          source_branch.matches("^(alauda/.*)$") ||
+          source_branch.matches("^(alauda-.*)$") ||
           target_branch.startsWith("refs/tags/")
         )
       ) || (
         event == "pull_request" && (
-          target_branch.matches("^(alauda/.*)$")
+          target_branch.matches("^(alauda-.*)$")
         )
       ))
     pipelinesascode.tekton.dev/max-keep-runs: "5"
@@ -35,8 +35,8 @@ spec:
       value: "0.2"
 
   params:
-    - name: reuse-artifacts
-      value: true
+    - name: reuse-artifact
+      value: "true"
     - name: tag-template
       value: "v2025.1.0-g${ShortSha}"
     - name: git-url
@@ -70,8 +70,9 @@ spec:
 
     - name: upstreams
       value:
-        - repo-url: https://github.com/AlaudaDevops/helm-chart-sonarqube.git
-          branch-name: alauda/9.9.8
+        - |
+          repo-url: https://github.com/AlaudaDevops/helm-chart-sonarqube.git
+          branch-name: {{ source_branch }}
           yaml-file-path: charts/sonarqube/values.yaml
     - name: upstream-branch-condition
       value: "^(main|master|release.*|alauda.*)$"
@@ -94,6 +95,9 @@ spec:
     - name: basic-auth
       secret:
         secretName: "{{ git_auth_secret }}"
+    - name: gitversion-config
+      configMap:
+        name: gitversion-config
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。

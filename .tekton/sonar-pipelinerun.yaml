@@ -35,8 +35,8 @@ spec:
       value: "0.2"
 
   params:
-    - name: reuse-artifacts
-      value: true
+    - name: reuse-artifact
+      value: "true"
     - name: tag-template
       value: "v2025.1.0-g${ShortSha}"
     - name: git-url
@@ -50,7 +50,7 @@ spec:
       value: build-harbor.alauda.cn/devops/sonarqube
 
     - name: context
-      value: image/community-build/
+      value: .
 
     - name: dockerfile-path
       value: image/community-build/Dockerfile
@@ -58,12 +58,11 @@ spec:
     - name: file-list-for-commit-sha
       value:
         - image/community-build/
+        - source/
 
     ## Some JAR files in the SonarQube installation package contain application vulnerabilities. Currently there are no new versions available.
     ## Need to wait for the community to release new versions before upgrading. Therefore, temporarily skip trivy scanning.
     - name: ignore-trivy-scan
-      value: true
-    - name: ignore-gitversion-tag
       value: true
 
     # - name: test-script

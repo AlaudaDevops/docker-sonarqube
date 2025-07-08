@@ -58,7 +58,8 @@ RUN set -eux; \
     ./gradlew build -DbuildNumber="$BUILD_NUMBER" -x test --console plain;
 
 RUN mkdir -p /data/patches \
-  && unzip sonar-application/build/distributions/sonarqube-${SONARQUBE_VERSION}.zip -d /data/sonarqube \
+  && unzip sonar-application/build/distributions/sonar-application-${SONARQUBE_VERSION}.zip -d /data \
+  && mv /data/sonarqube-${SONARQUBE_VERSION} /data/sonarqube \
   && ls -al /data/sonarqube
 
 COPY --chown=sonarsource:sonarsource image/community-build/apply-jar-patch.sh /tmp/apply-jar-patch.sh
@@ -66,13 +67,12 @@ COPY --chown=sonarsource:sonarsource image/community-build/apply-jar-patch.sh /t
 ARG JSON_SMART_VERSION=2.5.2
 # renovate: datasource=maven depName=io.netty/netty-handler
 ARG NETTY_HANDLER_VERSION=4.1.118.Final
-RUN set -eux; \
+RUN set -eux \
   && curl -o /data/patches/json-smart-${JSON_SMART_VERSION}.jar https://repo1.maven.org/maven2/net/minidev/json-smart/${JSON_SMART_VERSION}/json-smart-${JSON_SMART_VERSION}.jar \
   && curl -o /data/patches/netty-handler-${NETTY_HANDLER_VERSION}.jar https://repo1.maven.org/maven2/io/netty/netty-handler/${NETTY_HANDLER_VERSION}/netty-handler-${NETTY_HANDLER_VERSION}.jar \
   && chmod +x /tmp/apply-jar-patch.sh \
   && /tmp/apply-jar-patch.sh /data/patches /data/sonarqube
 
-RUN ls -al /data/sonarqube/elasticsearch/modules/transport-netty4/
 
 FROM docker-mirrors.alauda.cn/library/eclipse-temurin:17-jdk-jammy
 
@@ -106,7 +106,7 @@ RUN mkdir -p /opt
 COPY --from=builder /data/sonarqube/ ${SONARQUBE_HOME}
 
 RUN set -eux; \
-    deluser ubuntu; \
+    # deluser ubuntu; \
     useradd --system --uid 1000 --gid 0 sonarqube; \
     apt-get update; \
     apt-get --no-install-recommends -y install \

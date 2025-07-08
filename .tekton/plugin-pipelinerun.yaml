@@ -35,8 +35,8 @@ spec:
       value: "0.2"
 
   params:
-    - name: reuse-artifacts
-      value: true
+    - name: reuse-artifact
+      value: "true"
     - name: tag-template
       value: "v2025.1.0-g${ShortSha}"
     - name: git-url
@@ -94,6 +94,9 @@ spec:
     - name: basic-auth
       secret:
         secretName: "{{ git_auth_secret }}"
+    - name: gitversion-config
+      configMap:
+        name: gitversion-config
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。

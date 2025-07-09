@@ -230,7 +230,7 @@ subprojects {
 
   ext {
     protobufVersion = '4.29.0'
-    springVersion = '6.2.1'
+    springVersion = '6.2.7'
     springSecurityVersion = '6.4.1'
     elasticSearchClientVersion = '7.17.25'
   }
@@ -343,7 +343,7 @@ subprojects {
       // https://mvnrepository.com/artifact/ch.qos.logback.access/common
       dependency('ch.qos.logback.access:common:2.0.3')
       dependency('ch.qos.logback.access:logback-access-tomcat:2.0.5')
-      dependency('commons-beanutils:commons-beanutils:1.9.4') {
+      dependency('commons-beanutils:commons-beanutils:1.11.0') {
         exclude 'commons-logging:commons-logging'
       }
       dependency 'commons-codec:commons-codec:1.17.1'
@@ -381,7 +381,7 @@ subprojects {
       }
       dependency "com.google.protobuf:protobuf-java:${protobufVersion}"
       dependency 'com.h2database:h2:2.3.232'
-      dependencySet(group: 'com.hazelcast', version: '5.4.0') {
+      dependencySet(group: 'com.hazelcast', version: '5.5.0') {
         entry 'hazelcast'
       }
       // Documentation must be updated if mssql-jdbc is updated: https://github.com/SonarSource/sonarqube/commit/03e4773ebf6cba854cdcf57a600095f65f4f53e7
@@ -425,7 +425,7 @@ subprojects {
       dependency 'org.apache.commons:commons-lang3:3.17.0'
       dependency 'org.apache.commons:commons-email2-jakarta:2.0.0-M1'
       dependency 'org.apache.commons:commons-text:1.12.0'
-      dependency 'org.apache.mina:mina-core:2.2.3'
+      dependency 'org.apache.mina:mina-core:2.2.4'
       dependency 'org.apache.kerby:kerb-simplekdc:2.1.0'
       dependency 'org.apache.kerby:ldap-backend:2.1.0'
       dependency 'com.zaxxer:HikariCP:6.2.1'
@@ -438,7 +438,7 @@ subprojects {
         entry 'log4j-api'
         entry 'log4j-to-slf4j'
       }
-      dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.34') {
+      dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.42') {
         entry 'tomcat-embed-core'
         entry('tomcat-embed-jasper') {
           exclude 'org.eclipse.jdt.core.compiler:ecj'
@@ -466,7 +466,7 @@ subprojects {
       }
       dependency "org.elasticsearch.plugin:transport-netty4-client:${elasticSearchClientVersion}"
       dependency 'org.elasticsearch:mocksocket:1.2'
-      dependency 'org.eclipse.jgit:org.eclipse.jgit:7.0.0.202409031743-r'
+      dependency 'org.eclipse.jgit:org.eclipse.jgit:7.0.1.202505221510-r'
       dependency "org.codelibs.elasticsearch.module:analysis-common:7.17.22"
       dependency "org.codelibs.elasticsearch.module:reindex:7.17.22"
       dependency 'org.tmatesoft.svnkit:svnkit:1.10.11'
@@ -501,7 +501,7 @@ subprojects {
         entry 'log4j-over-slf4j'
         entry 'slf4j-api'
       }
-      dependency 'org.postgresql:postgresql:42.7.4'
+      dependency 'org.postgresql:postgresql:42.7.7'
       dependency 'org.reflections:reflections:0.10.2'
       dependency 'org.simpleframework:simple:5.1.6'
       dependency 'org.sonarsource.git.blame:git-files-blame:1.1.0.1835'

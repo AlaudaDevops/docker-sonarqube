@@ -1,6 +1,6 @@
 {
   "extends": [
-    "config:base",
+    "config:recommended",
     ":preserveSemverRanges"
   ],
   "branchConcurrentLimit": 0,
@@ -51,14 +51,20 @@
   "packageRules": [
     {
       "description": "Enable security vulnerability fixes",
-      "matchUpdateTypes": ["security"],
+      "matchUpdateTypes": [
+        "security"
+      ],
       "enabled": true,
       "automerge": true,
-      "labels": ["security"]
+      "labels": [
+        "security"
+      ]
     },
     {
       "description": "Disable all other updates",
-      "matchPackageNames": ["*"],
+      "matchPackageNames": [
+        "*"
+      ],
       "enabled": false
     }
   ],
@@ -66,8 +72,12 @@
   "dependencyDashboardOSVVulnerabilitySummary": "all",
   "vulnerabilityAlerts": {
     "vulnerabilityFixStrategy": "lowest",
-    "labels": ["security"],
+    "labels": [
+      "security"
+    ],
     "automerge": true,
-    "assignees": ["@kycheng"]
+    "assignees": [
+      "@kycheng"
+    ]
   }
 }

@@ -50,13 +50,20 @@
   ],
   "packageRules": [
     {
-      "enabled": false,
-      "matchPackageNames": [
-        "*"
-      ]
+      "description": "Enable security vulnerability fixes",
+      "matchUpdateTypes": ["security"],
+      "enabled": true,
+      "automerge": true,
+      "labels": ["security"]
+    },
+    {
+      "description": "Disable all other updates",
+      "matchPackageNames": ["*"],
+      "enabled": false
     }
   ],
   "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "all",
   "vulnerabilityAlerts": {
     "vulnerabilityFixStrategy": "lowest",
     "labels": ["security"],
